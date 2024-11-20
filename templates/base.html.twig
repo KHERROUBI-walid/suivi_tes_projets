@@ -1,17 +1,92 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+
+        <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                const body = document.body;
+                const themeButton = document.getElementById('theme-toggle');
+                const logo = document.getElementById('logo');
+            
+                // Définir les URLs des logos en fonction du thème clair et sombre
+                const lightLogo = "{{ asset('images/logos/suip_claire.png') }}";
+                const darkLogo = "{{ asset('images/logos/suip_sombre1.png') }}";
+            
+                // Vérifie le thème stocké dans localStorage et applique le thème
+                if (localStorage.getItem('theme') === 'light') {
+                    body.classList.add('light-mode');
+                    themeButton.textContent = 'Switch to Dark Mode';
+                    logo.src = lightLogo;
+                } else {
+                    body.classList.remove('light-mode');
+                    themeButton.textContent = 'Switch to Light Mode';
+                    logo.src = darkLogo;
+                }
+            
+                // Bascule entre les modes clair et sombre et sauvegarde la préférence
+                themeButton.addEventListener('click', function() {
+                    body.classList.toggle('light-mode');
+                    if (body.classList.contains('light-mode')) {
+                        themeButton.textContent = 'Switch to Dark Mode';
+                        localStorage.setItem('theme', 'light');
+                        logo.src = lightLogo;
+                    } else {
+                        themeButton.textContent = 'Switch to Light Mode';
+                        localStorage.setItem('theme', 'dark');
+                        logo.src = darkLogo;
+                    }
+                });
+            });
+        </script>
+    {% endblock %}
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <img id="logo" height="120px" width="120px" src="{{ asset('images/logos/logo.png') }}" alt="Logo">
+        
+        <nav>
+            <ul>
+                <li><a href="{{ path('app_projects') }}" class="active">Projets</a></li>
+                <li><a href="#">Account</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+
+        <header>
+            <div class="header-options">
+                <button id="theme-toggle">Switch to Light Mode</button>
+                <button>Se connecter</button>
+            </div>
+        </header>
+
+        <nav class="sub-navigation">
+             <ul>
+                <li><a href="{{ path('app_projects') }}" class="active">Projets</a></li>
+                <li><a href="#">Account</a></li>
+            </ul>
+        </nav>
+
+
+        <!-- Main Body Content -->
         {% block body %}{% endblock %}
-    </body>
+        
+    </div>
+
+</body>
 </html>
