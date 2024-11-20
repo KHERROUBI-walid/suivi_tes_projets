@@ -1,0 +1,223 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff;
+
+}
+
+.views{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.h1_tasks {
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.views-btns button {
+    background-color: #feffff;
+    color: #1f1f1f;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    top: 20px;
+    
+}
+
+a {
+    color: #1f1f1f;
+    text-decoration: none;
+}
+button:hover a{
+    color: white;
+
+}
+
+.views-btns button:hover {
+    background-color: #007bff;
+}
+
+.calendrier-conteneur{
+    border: 2px solid #1f1f1f;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #1f1f1f;
+    opacity: 97%;
+    margin-bottom: 80px;
+    
+}
+
+.light-mode .calendrier-conteneur{
+    background-color:  white;
+    border: 2px solid  #e0e0e0;
+    opacity: 95%;
+}
+
+/* Status Filters */
+.status-filters {
+    width: 100%;
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 40px;
+}
+
+.light-mode .status-filters {
+    color: black;
+}
+
+.status {
+    font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+.status:hover{
+    color: black;
+}
+
+/* Conteneur du calendrier */
+#weekdays {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+
+
+
+#calendar .week-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    box-sizing: border-box;
+}
+    
+
+    /*
+    #calendar {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        box-sizing: border-box;
+    }
+        */
+
+#calendar-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 10px;
+}
+
+#calendar-nav button a {
+    color: white;
+    text-decoration: none;
+}
+
+#calendar-nav button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 13px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
+}
+
+#calendar-nav button:hover {
+    background-color: #0056b3;
+}
+
+#month-year {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+
+
+.day {
+    padding: 10px;
+    border: 1px solid #504e4e;
+    border-radius: 5px;
+    min-height: 80px;
+    position: relative;
+    background-color: #504e4e;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* Transition unique */
+}
+
+.light-mode .day {
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(255, 255, 255);
+}
+
+.day.empty {
+    background-color: #e0e0e0; /* Fond gris pour les cellules vides */
+    border: none;
+}
+
+.day.today {
+    background-color: #e3f2fd; /* Couleur pour le jour actuel */
+}
+
+.day .date-number {
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 0.9em;
+}
+
+.light-mode .date-number {
+    color: #333;
+}
+
+/* Style des tâches */
+.task {
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: rgb(255, 255, 255);
+    font-size: 0.85em;
+    margin-top: 5px;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.light-mode .task {
+    color: #333;
+}
+
+.task:hover {
+    color: #333;
+    transition: background-color 0.3s ease;
+}
+
+/* Survol des jours et boutons */
+.day:hover {
+    background-color: #343434;  /* couleur de fond pour survol */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* ajout d'une ombre subtile */
+    transform: scale(1.05); /* Agrandissement du jour au survol */
+}
+
+.light-mode .day:hover {
+    background-color: #e0e0e0;
+}
+/* Responsivité */
+@media (max-width: 600px) {
+    #calendar {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

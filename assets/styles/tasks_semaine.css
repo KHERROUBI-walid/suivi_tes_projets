@@ -1,0 +1,99 @@
+.navigation {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.navigation .btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.navigation .btn:hover {
+    background-color: #0056b3;
+}
+
+.btn.disabled {
+    pointer-events: none;
+    opacity: 0.5;  
+}
+
+
+.calendrier-conteneur {
+    border: 2px solid #1f1f1f;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #1f1f1f;
+    opacity: 97%;
+    margin-bottom: 80px;
+}
+
+.weekday {
+    text-align: center;
+    color: white;
+}
+
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.week, .month {
+    margin: 10px;
+    display:flex;
+    flex-direction: column;
+    text-align:center;
+    background-color: #504e4e;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.week h3, .month h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.light-mode .week h3, .light-mode .month h3, .light-mode .week p, .light-mode .month p {
+    color: rgb(0, 0, 0);
+}
+
+.week ul, .month ul{
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.week li, .month li{
+    margin-bottom: 5px;
+}
+
+.week p, .month p {
+    color: #ffffff;
+}
+
+/* Hover effect for weeks */
+.week:hover, .month:hover {
+    background-color: #343434;
+    transform: scale(1.05);
+}
+
+.week:hover p, .month:hover p {
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+
+
+.week.empty , .month.empty{
+    background-color: #e0e0e0;
+    color: #666;
+}
