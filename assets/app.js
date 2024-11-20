@@ -7,6 +7,7 @@ import './bootstrap.js';
  */
 import './styles/app.css';
 import './styles/projects.css';
+import './styles/tasks_base.css';
 
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

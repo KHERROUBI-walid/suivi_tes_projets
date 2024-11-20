@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<link rel="stylesheet" href="{{ asset('/styles/tasks_semaine.css') }}">
+
+        <div class="views">
+            <h1 class="h1_tasks">Calendrier des taches</h1>
+            <div class="views-btns">
+                <button><a href="{{ path('app_tasks_day', { project_id: project_id }) }}">Jour</a></button>
+                <button><a href="{{ path('app_tasks_week', { project_id: project_id }) }}">Semaine</a></button>
+                <button><a href="{{ path('app_tasks_month', { project_id: project_id }) }}">Mois</a></button>
+            </div>
+        </div>
+
+<main class="page">
+    <div class="calendrier-conteneur">
+
+    <div class="status-filters">
+                <span class="status pas_commence">Pas encore commencé</span>
+                <span class="status en_cours">En cours</span>
+                <span class="status termine">Terminé</span>
+                <span class="status en_retard">En retard</span>
+    </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="{{ path('app_tasks_week', { project_id: project_id, page: page - 1 }) }}" class="btn btn-primary {% if page <= 1 %}disabled{% endif %}">
+                Précédent
+            </a>
+            <a href="{{ path('app_tasks_week', { project_id: project_id, page: page + 1 }) }}" class="btn btn-primary">
+                Suivant
+            </a>
+        </div>
+
+        <!-- Calendrier -->
+        <div id="calendar">
+            {% for week, tasks in weeks %}
+                <div class="card week">
+                    <h3>Semaine du {{ week|date('d/m/Y') }}</h3>
+                    {% if tasks is empty %}
+                        <p>Aucune tâche pour cette semaine.</p>
+                    {% else %}
+                        <ul>
+                            {% for task in tasks %}
+                                <li class="task {{ task.StatutTask }}">
+                                    {{ task.description }} ( {{ task.dateDebutTache|date('d/m/Y') }} - {{ task.dateFinTache|date('d/m/Y') }})
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}
