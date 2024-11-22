@@ -15,40 +15,40 @@
         {% block importmap %}{{ importmap('app') }}{% endblock %}
 
         <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                const body = document.body;
-                const themeButton = document.getElementById('theme-toggle');
-                const logo = document.getElementById('logo');
-            
-                // Définir les URLs des logos en fonction du thème clair et sombre
-                const lightLogo = "{{ asset('images/logos/suip_claire.png') }}";
-                const darkLogo = "{{ asset('images/logos/suip_sombre1.png') }}";
-            
-                // Vérifie le thème stocké dans localStorage et applique le thème
-                if (localStorage.getItem('theme') === 'light') {
-                    body.classList.add('light-mode');
+            document.addEventListener('DOMContentLoaded', function() {
+            const body = document.body;
+            const themeButton = document.getElementById('theme-toggle');
+            const logo = document.getElementById('logo');
+        
+            // Définir les URLs des logos en fonction du thème clair et sombre
+            const lightLogo = "/images/logos/suip_claire.png";
+            const darkLogo = "/images/logos/suip_sombre1.png";
+        
+            // Vérifie le thème stocké dans localStorage et applique le thème
+            if (localStorage.getItem('theme') === 'light') {
+                body.classList.add('light-mode');
+                themeButton.textContent = 'Switch to Dark Mode';
+                logo.src = lightLogo;
+            } else {
+                body.classList.remove('light-mode');
+                themeButton.textContent = 'Switch to Light Mode';
+                logo.src = darkLogo;
+            }
+        
+            // Bascule entre les modes clair et sombre et sauvegarde la préférence
+            themeButton.addEventListener('click', function() {
+                body.classList.toggle('light-mode');
+                if (body.classList.contains('light-mode')) {
                     themeButton.textContent = 'Switch to Dark Mode';
+                    localStorage.setItem('theme', 'light');
                     logo.src = lightLogo;
                 } else {
-                    body.classList.remove('light-mode');
                     themeButton.textContent = 'Switch to Light Mode';
+                    localStorage.setItem('theme', 'dark');
                     logo.src = darkLogo;
                 }
-            
-                // Bascule entre les modes clair et sombre et sauvegarde la préférence
-                themeButton.addEventListener('click', function() {
-                    body.classList.toggle('light-mode');
-                    if (body.classList.contains('light-mode')) {
-                        themeButton.textContent = 'Switch to Dark Mode';
-                        localStorage.setItem('theme', 'light');
-                        logo.src = lightLogo;
-                    } else {
-                        themeButton.textContent = 'Switch to Light Mode';
-                        localStorage.setItem('theme', 'dark');
-                        logo.src = darkLogo;
-                    }
-                });
             });
+        });
         </script>
     {% endblock %}
 </head>
@@ -61,24 +61,34 @@
         <nav>
             <ul>
                 <li><a href="{{ path('app_projects') }}" class="active">Projets</a></li>
-                <li><a href="#">Account</a></li>
+                <li><a href="#">Compte</a></li>
+              {% if is_granted("ROLE_MANAGER") %}
+                <li><a href="#">Ajouter un projet</a></li>
+                <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
+             {% endif %}
             </ul>
         </nav>
     </div>
 
+    <!-- Main Content -->
     <div class="main-content">
 
+        <!-- Header -->
         <header>
             <div class="header-options">
-                <button id="theme-toggle">Switch to Light Mode</button>
-                <button>Se connecter</button>
+                <button id="theme-toggle">Mode</button>
+                {% if is_granted("ROLE_MANAGER") %}
+                <a href="{{ path('app_logout') }}"><button>Se déconnecter</button></a>
+                {% else %}
+                <a href="{{ path('app_login') }}"><button>Se connecter</button></a>
+                {% endif %}
             </div>
         </header>
 
         <nav class="sub-navigation">
              <ul>
                 <li><a href="{{ path('app_projects') }}" class="active">Projets</a></li>
-                <li><a href="#">Account</a></li>
+                <li><a href="#">Compte</a></li>
             </ul>
         </nav>
 

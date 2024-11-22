@@ -34,6 +34,10 @@ class Project
     #[ORM\Column(length: 100)]
     private ?string $statut_projet = null;
 
+    #[ORM\ManyToOne(inversedBy: 'projects')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
@@ -121,6 +125,18 @@ class Project
     public function setStatutProjet(string $statut_projet): static
     {
         $this->statut_projet = $statut_projet;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
