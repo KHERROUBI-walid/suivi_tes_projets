@@ -16,6 +16,20 @@ class ProjectRepository extends ServiceEntityRepository
         parent::__construct($registry, Project::class);
     }
 
+
+    /**
+     * Récupère les projets d'un manager spécifique par son ID.
+     */
+    public function findByManager(int $user_id): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :user_id')
+            ->setParameter('user_id', $user_id)
+            ->orderBy('p.date_fin', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Project[] Returns an array of Project objects
 //     */

@@ -1,0 +1,162 @@
+/* Style général du conteneur */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #2E2E3A;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    display: flex;
+    max-width: 1000px;
+    width: 90%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #1C1C28;
+}
+
+/* Section gauche avec image */
+.left-section {
+    width: 50%;
+    position: relative;
+    background-color: #2E2E3A;
+}
+
+.background-image {
+    background-image: url('/images/cnxn4.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100%;
+    width: 100%;
+}
+
+.logo {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    top: -20px;
+}
+
+/* Section droite avec formulaire */
+.alert-danger {
+    width: 95%;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #f7d6d6; 
+    color: #ff0000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.right-section {
+    width: 50%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #2E2E3A;
+}
+
+/* Formulaire */
+.login-form {
+    color: #D0D0E1;
+}
+
+.form-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #5A5A7C;
+    background-color: #3C3C4E;
+    color: #ffffff;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #6C63FF; 
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #5348C9;
+}
+
+/* Options supplémentaires */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.password-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.form-control {
+    flex: 1;
+}
+
+.toggle-password {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 8px;
+    font-size: 1.2rem;
+    color: #6C63FF;
+}
+
+.toggle-password:hover {
+    color: #5348C9; 
+}
+
+
+.forgot-password {
+    color: #A0A0C0;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* Lien d'inscription */
+.register-link {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.register-link a {
+    color: #6C63FF;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
