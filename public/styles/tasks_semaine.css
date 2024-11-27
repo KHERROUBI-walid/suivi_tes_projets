@@ -57,6 +57,16 @@
     transition: background-color 0.3s ease;
 }
 
+.light-mode .week, .light-mode .month {
+    color: #504e4e;
+    background-color: rgb(237, 237, 237);
+
+}
+
+.light-mode .week:hover, .light-mode .month:hover{
+    background-color: rgb(230, 230, 230);
+}
+
 .week h3, .month h3 {
     font-size: 1.2em;
     margin-bottom: 10px;
@@ -66,6 +76,7 @@
 .light-mode .week h3, .light-mode .month h3, .light-mode .week p, .light-mode .month p {
     color: rgb(0, 0, 0);
 }
+
 
 .week ul, .month ul{
     list-style-type: none;
@@ -91,7 +102,9 @@
     transform: scale(1.05);
 }
 
-
+.light-mode .week:hover p, .light-mode .month:hover p {
+    color: #343434;
+}
 
 .week.empty , .month.empty{
     background-color: #e0e0e0;

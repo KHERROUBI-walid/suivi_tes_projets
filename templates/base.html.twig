@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Welcome!{% endblock %}</title>
     
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-    {% block javascripts %}
-        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    <link href="{{ asset('styles/app.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('styles/project.css') }}" rel="stylesheet"/>
 
+
+
+    {% block javascripts %}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
             const body = document.body;
@@ -21,17 +21,17 @@
             const logo = document.getElementById('logo');
         
             // Définir les URLs des logos en fonction du thème clair et sombre
-            const lightLogo = "/images/logos/suip_claire.png";
-            const darkLogo = "/images/logos/suip_sombre1.png";
+            const lightLogo = "{{ (asset('images/logos/suip_claire.png')) }}";
+            const darkLogo = "{{ (asset('images/logos/suip_sombre1.png')) }}";
         
             // Vérifie le thème stocké dans localStorage et applique le thème
             if (localStorage.getItem('theme') === 'light') {
                 body.classList.add('light-mode');
-                themeButton.textContent = 'Switch to Dark Mode';
+                themeButton.textContent = 'Mode sombre';
                 logo.src = lightLogo;
             } else {
                 body.classList.remove('light-mode');
-                themeButton.textContent = 'Switch to Light Mode';
+                themeButton.textContent = 'Mode claire';
                 logo.src = darkLogo;
             }
         
@@ -39,11 +39,11 @@
             themeButton.addEventListener('click', function() {
                 body.classList.toggle('light-mode');
                 if (body.classList.contains('light-mode')) {
-                    themeButton.textContent = 'Switch to Dark Mode';
+                    themeButton.textContent = 'Mode sombre';
                     localStorage.setItem('theme', 'light');
                     logo.src = lightLogo;
                 } else {
-                    themeButton.textContent = 'Switch to Light Mode';
+                    themeButton.textContent = 'Mode claire';
                     localStorage.setItem('theme', 'dark');
                     logo.src = darkLogo;
                 }
@@ -60,12 +60,14 @@
         
         <nav>
             <ul>
-                <li><a href="{{ path('app_projects') }}" class="active">Projets</a></li>
-                <li><a href="#">Compte</a></li>
               {% if is_granted("ROLE_MANAGER") %}
-                <li><a href="#">Ajouter un projet</a></li>
+                <li><a href="{{ path('app_projects_manager') }}" class="active">Projets</a></li>
+                <li><a href="#" class="ouvrir-modale">Ajouter un projet</a></li>
                 <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
-             {% endif %}
+
+              {% else %}
+                <li><a href="{{ path('app_projects') }}" class="active">Projets</a></li>
+              {% endif %}
             </ul>
         </nav>
     </div>
@@ -74,7 +76,7 @@
     <div class="main-content">
 
         <!-- Header -->
-        <header>
+        <header style='display: flex; justify-content: end;'>
             <div class="header-options">
                 <button id="theme-toggle">Mode</button>
                 {% if is_granted("ROLE_MANAGER") %}
@@ -84,14 +86,15 @@
                 {% endif %}
             </div>
         </header>
-
+    <!--
         <nav class="sub-navigation">
              <ul>
                 <li><a href="{{ path('app_projects') }}" class="active">Projets</a></li>
-                <li><a href="#">Compte</a></li>
+                {% if is_granted("ROLE_MANAGER") %}
+                 <li><a href="" data-toggle="modal" data-target="#addProjectModal">Ajouter un projet</a></li>
+                {% endif %}
             </ul>
-        </nav>
-
+        </nav> -->
 
         <!-- Main Body Content -->
         {% block body %}{% endblock %}

@@ -35,6 +35,11 @@ body.light-mode {
     margin-bottom: 100px;
 }
 
+#logo {
+    position: relative;
+    top: -30px;
+}
+
 body.light-mode .sidebar {
     background-color: #ffffff; 
 }

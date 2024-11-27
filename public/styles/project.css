@@ -1,0 +1,191 @@
+/* Styles généraux pour la page des projets */
+.page {
+    color: #ffffff;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+}
+
+/* Titre principal */
+.page h1 {
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    color: #ffffff;
+}
+
+.light-mode h1 {
+    color: rgb(27, 27, 27);
+}
+
+.statuts-filtres{
+    display: flex;
+    background-color: #1f1f1f;
+    border-radius: 25px;
+    width: 100%;
+    margin: auto;
+    justify-content: space-around;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding:10px;
+}
+
+.light-mode .statuts-filtres {
+    background-color: #ffffff;
+}
+
+.statut {
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.light-mode .statut {
+    color: black;
+}
+
+.statut:hover {
+    color: #1f1f1f;
+}
+
+/* Section des cartes de projet */
+.projects_section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.project_cartes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* Styles pour chaque carte de projet */
+.carte {
+    background-color: #2e3138;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    width: 270px;
+    height: 180px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    text-align: left;
+    color: #ffffff;
+}
+
+
+/* Effets au survol des cartes */
+.carte:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+    color: black;
+}
+
+.light-mode .carte {
+    background-color: #ffffff;
+}
+
+/* Titre de chaque projet */
+.carte h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.carte:hover h3 {
+    color: black;
+}
+
+.light-mode .carte h3 {
+    color: black;
+}
+
+/* Informations des projets */
+.carte p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #b0b0b0;
+}
+
+/* Bordure de gauche pour indiquer le statut */
+.pas_commence {
+    border-left: 4px solid #ffcc00;
+}
+
+.en_cours {
+    border-left: 4px solid #76e2ff;
+}
+
+.termine {
+    border-left: 4px solid #00cc66; 
+}
+
+.en_retard {
+    border-left: 4px solid #ff4d4d;
+}
+
+
+
+.carte:hover p {
+    color: #454545;
+}
+
+.carte h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.carte p {
+    font-size: 14px;
+    color: #b3b3b3;
+    margin-bottom: 20px;
+
+}
+
+
+body.light-mode .carte p {
+    color: #333;
+}
+
+.pas_commence:hover {
+    background-color: #f3ede4;
+}
+
+.en_cours:hover {
+    background-color: #e4f0f4;
+}
+
+.termine:hover {
+    background-color: #dff0e3;
+}
+
+.en_retard:hover {
+    background-color: rgb(244, 226, 226);
+} 
+
+/*mode claire */
+
+.light-mode .pas_commence:hover {
+    background-color: #f3ede4;
+}
+
+.light-mode .en_cours:hover {
+    background-color: #e4f0f4;
+}
+
+.light-mode .termine:hover {
+    background-color: #dff0e3;
+}
+
+.light-mode .en_retard:hover {
+    background-color: rgb(244, 226, 226);
+}
+

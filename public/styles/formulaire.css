@@ -1,0 +1,133 @@
+/* Style de l'arrière-plan sombre qui couvre toute la page quand la modale est ouverte */
+.fond-modale {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    animation: apparaitre 0.5s ease-out; 
+}
+
+/* Boîte de dialogue principale */
+.contenu-modale {
+    position: relative;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    width: 500px;
+    max-width: 90%;
+    animation: descendre 0.6s ease-out; /* Animation de descente */
+    z-index: 1001;
+}
+
+/* En-tête de la boîte de dialogue */
+.en-tete {
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.titre-modale {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+label {
+    color: black;
+    margin-bottom: 10px;
+}
+
+/* Bouton de fermeture personnalisé */
+.fermer-bouton {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+/* Corps de la boîte de dialogue */
+.contenu-principal {
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+/* Pied de la boîte de dialogue */
+.pied-modale {
+    padding: 10px 20px;
+    background-color: #e9ecef;
+    text-align: right;
+}
+
+/* Champs de formulaire */
+.champ-groupe {
+    margin-bottom: 15px;
+}
+
+.champ-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Boutons personnalisés */
+.bouton-nouveau {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.bouton-fermer {
+    background-color: #6c757d;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Effets au survol */
+.bouton-nouveau:hover,
+.bouton-fermer:hover {
+    opacity: 0.8;
+}
+
+/* Animations */
+@keyframes descendre {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes apparaitre {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Afficher la modale */
+.fond-modale.afficher {
+    display: flex;
+}
