@@ -8,6 +8,8 @@
     {% endif %}
 
 <main class="page">
+
+
     <h1>Nos projets en cours</h1>
     <div class="statuts-filtres">
             <p class="statut pas_commence">Pas encore commencé</p>
@@ -30,6 +32,11 @@
                             <p>Date de Début : {{ project.date_debut|date('d-m-Y') }}</p>
                             <p>Date de Fin : {{ project.date_fin|date('d-m-Y') }}</p>
                         </a>
+                        <form action="{{ path('project_delete', { 'project_id': project.id }) }}" method="post" style="display: inline;" onsubmit="return confirm('Attention ! Vous allez supprimer le projet !');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_project_' ~ project.id) }}">
+                            <button class="del_project" type="submit"><img src="{{ asset('/images/icons/sup.png') }}" height="30px"></img></button>
+                        </form>
+
                     </div>
                 {% else %}
                     {% if date_aujourdhui >= project.date_debut and date_aujourdhui <= project.date_fin %}

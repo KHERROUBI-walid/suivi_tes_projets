@@ -24,8 +24,10 @@ class Task
     private ?\DateTimeInterface $date_fin_tache = null;
 
     #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'tasks')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Project $project = null;
+    
+
 
     #[ORM\Column(length: 100)]
     private ?string $statut_task = null;
