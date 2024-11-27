@@ -1,40 +1,93 @@
 <?php
 
-// src/Controller/ProjectsController.php
-
 namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Project;
+use App\Form\AddProjectType;
 use App\Repository\ProjectRepository;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProjectsController extends AbstractController
 {
-    #[Route('/', name: 'app_projects')]
-    public function show(ProjectRepository $projectRepository, TaskRepository $taskRepository, EntityManagerInterface $entityManager): Response
-    {
-        /** @var User|null $user */
-        $user = $this->getUser();
-        
-        // Vérifier les projets en fonction du rôle de l'utilisateur
-        if ($user instanceof User && $this->isGranted('ROLE_MANAGER')) {
-            $projects = $projectRepository->findByManager($user->getId());
-        } else {
-            $projects = $projectRepository->findBy([], ['date_fin' => 'ASC']);
+    #[Route('/projects', name: 'app_projects', methods: ['GET'])]
+    public function userProjects(
+        ProjectRepository $projectRepository,
+        TaskRepository $taskRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
+
+        if ($this->isGranted('ROLE_MANAGER')) {
+            return new RedirectResponse('/projects/manager');
         }
 
-        // Mise à jour du statut de chaque projet avant affichage
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return new RedirectResponse('/projects/admin');
+        }
+
+        // Récupérer tous les projets triés par date de fin
+        $projects = $projectRepository->findBy([], ['date_fin' => 'ASC']);
+
+        // Mise à jour des statuts des projets
         foreach ($projects as $project) {
             $this->updateProjectStatus($project, $taskRepository, $entityManager);
         }
 
         return $this->render('projects/projects.html.twig', [
             'projects' => $projects,
+            'is_manager' => false,
+        ]);
+    }
+
+    #[Route('/projects/manager', name: 'app_projects_manager', methods: ['GET', 'POST'])]
+    public function managerProjects(
+        Request $request,
+        ProjectRepository $projectRepository,
+        TaskRepository $taskRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
+        /** @var User|null $user */
+        $user = $this->getUser();
+
+        // Vérification des droits d'accès
+        if (!$this->isGranted('ROLE_MANAGER')) {
+            throw $this->createAccessDeniedException('Accès réservé aux gestionnaires.');
+        }
+
+        // Récupérer les projets liés au gestionnaire
+        $projects = $projectRepository->findByManager($user->getId());
+
+        // Mise à jour des statuts des projets
+        foreach ($projects as $project) {
+            $this->updateProjectStatus($project, $taskRepository, $entityManager);
+        }
+
+        // Gestion de l'ajout d'un projet
+        $project = new Project();
+        $form = $this->createForm(AddProjectType::class, $project);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $project->setUser($user);
+            $project->setStatutProjet('pas_commence');
+            $entityManager->persist($project);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Projet ajouté avec succès.');
+
+            return $this->redirectToRoute('app_projects_manager');
+        }
+
+        return $this->render('projects/projects.html.twig', [
+            'projects' => $projects,
+            'addProjectForm' => $form->createView(),
+            'is_manager' => true,
         ]);
     }
 
@@ -45,7 +98,7 @@ class ProjectsController extends AbstractController
         $dateFin = $project->getDateFin();
         $tasks = $taskRepository->findBy(['project' => $project]);
 
-        // gerer les statuts
+        // Gestion des statuts
         $allTasksCompleted = true;
         $atLeastOneTaskCompleted = false;
 
@@ -57,19 +110,13 @@ class ProjectsController extends AbstractController
             }
         }
 
-        if ($allTasksCompleted) {
+        if ($allTasksCompleted && count($tasks) !== 0) {
             $project->setStatutProjet('termine');
-        }
-
-        elseif ($now > $dateFin && !$allTasksCompleted) {
+        } elseif ($now > $dateFin && !$allTasksCompleted) {
             $project->setStatutProjet('en_retard');
-        }
-
-        elseif ($now < $dateDebut) {
+        } elseif ($now < $dateDebut || !$atLeastOneTaskCompleted || count($tasks) === 0) {
             $project->setStatutProjet('pas_commence');
-        }
-    
-        elseif ($atLeastOneTaskCompleted && $now >= $dateDebut && $now <= $dateFin) {
+        } else {
             $project->setStatutProjet('en_cours');
         }
 

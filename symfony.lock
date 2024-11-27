@@ -248,6 +248,18 @@
             "templates/base.html.twig"
         ]
     },
+    "symfony/ux-lazy-image": {
+        "version": "2.21",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.18",
+            "ref": "f6554b7efe60280645ac979c80700f66b8432131"
+        },
+        "files": [
+            "./config/packages/lazy_image.yaml"
+        ]
+    },
     "symfony/ux-turbo": {
         "version": "2.21",
         "recipe": {

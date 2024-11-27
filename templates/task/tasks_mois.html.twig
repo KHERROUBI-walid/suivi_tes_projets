@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<link rel="stylesheet" href="{{ asset('/styles/tasks_semaine.css') }}">
+<link href="{{ asset('styles/tasks_base.css') }}" rel="stylesheet"/>
+<link rel="stylesheet" href="{{ asset('/styles/tasks_semaine.css') }}"> {#tasks-moi.css dans semaine#}
 
 <div class="views">
             <h1 class="h1_tasks">Calendrier des taches</h1>

@@ -91,7 +91,6 @@ button:hover a{
 
 
 
-
 #calendar .week-row {
     width: 100%;
     display: grid;
@@ -101,14 +100,14 @@ button:hover a{
 }
     
 
-    /*
+    
     #calendar {
         width: 100%;
         display: flex;
         justify-content: space-around;
         box-sizing: border-box;
     }
-        */
+        
 
 #calendar-nav {
     display: flex;
@@ -142,7 +141,9 @@ button:hover a{
     font-weight: bold;
 }
 
-
+.light-mode #month-year {
+    color: #1f1f1f;
+}
 
 .day {
     padding: 10px;
@@ -159,17 +160,17 @@ button:hover a{
 }
 
 .light-mode .day {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(241, 241, 241);
     border: 1px solid rgb(255, 255, 255);
 }
 
 .day.empty {
-    background-color: #e0e0e0; /* Fond gris pour les cellules vides */
+    background-color: #bcbcbc;
     border: none;
 }
 
 .day.today {
-    background-color: #e3f2fd; /* Couleur pour le jour actuel */
+    background-color: #e3f2fd;
 }
 
 .day .date-number {
