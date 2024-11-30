@@ -37,7 +37,7 @@
                         </a>
                         <form class="del_project" action="{{ path('project_delete', { 'project_id': project.id }) }}" method="post" style="display: inline;" onsubmit="return confirm('Attention ! Vous allez supprimer le projet !');">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete_project_' ~ project.id) }}">
-                            <button type="submit"><img src="{{ asset('/images/icons/sup.png') }}" height="35px"></img></button>
+                            <button type="submit"><img src="{{ asset('/images/icons/delete(2).png') }}" height="40px" width="35px"></img></button>
                         </form>
 
                     </div>

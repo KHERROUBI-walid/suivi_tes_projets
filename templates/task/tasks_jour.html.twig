@@ -58,8 +58,26 @@
                                 <span class="date-number">{{ day.date|date('d') }}</span>
                                 {% for task in day.tasks %}
                                     <div class="task {{ task.StatutTask }}" id="task-{{ task.idTask }}">
-                                        {{ task.description }} <br>
-                                        date de fin : {{ task.dateFinTache|date('d-m-Y') }}
+                                        <img src="{{ asset('/images/icons/progress.png') }}" width="50px" onclick="openPopup({{ task.idTask }})"></img>
+                                        <!-- Menu popup -->
+                                        <div id="popup-{{ task.idTask }}" class="popup" style="display: none;">
+                                            <div class="popup-content">
+                                                <form method="post" action="{{ path('change_task_status', {project_id: project_id, id: task.idTask}) }}">
+                                                    <select id="status-select-{{ task.idTask }}" name="new_status" class="popup-select">
+                                                        <option value="pas_commence" {% if task.StatutTask == 'pas_commence' %}selected{% endif %}>Pas commence</option>
+                                                        <option value="en_cours" {% if task.StatutTask == 'en_cours' %}selected{% endif %}>En cours</option>
+                                                        <option value="termine" {% if task.StatutTask == 'termine' %}selected{% endif %}>Termine</option>
+                                                        <option value="en_retard" {% if task.StatutTask == 'en_retard' %}selected{% endif %}>En retard</option>
+                                                    </select>
+                                                    <button type="submit" class="popup-btn">Valider</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p> {{ task.description }} </p>
+                                            <p> date de fin : {{ task.dateFinTache|date('d-m-Y') }} </p>
+                                        </div>
+
                                     </div>
                                 {% endfor %}
                             {% endif %}
