@@ -1,71 +1,33 @@
 {% block body %}
-<link href="{{ asset('styles/formulaire.css') }}" rel="stylesheet"/>
+<link href="{{ asset('styles/formulaire.css') }}" rel="stylesheet" />
+<script src="{{ asset('js/form.js') }}"></script>
 
-<!-- La boîte de dialogue modale personnalisée -->
-<div class="fond-modale" id="modaleProjet" tabindex="-1" role="dialog" aria-labelledby="titreModaleProjet" aria-hidden="true">
-  <div class="contenu-modale" role="document">
-    <div class="corps-modale">
-      <!-- En-tête de la boîte de dialogue -->
-      <div class="en-tete">
-        <h5 class="titre-modale" id="titreModaleProjet">Ajouter un projet</h5>
-        <button type="button" class="fermer-bouton" data-dismiss="modale" aria-label="Fermer">
-          <span aria-hidden="true">&times;</span>
-        </button>
+<div class="fond-modale" id="modaleProjet">
+  <div class="contenu-modale">
+    <div class="en-tete">
+      <h5 class="titre-modale">Ajouter un projet</h5>
+      <button type="button" class="bouton-fermer" aria-label="Fermer">&times;</button>
+    </div>
+    <div class="contenu-principal">
+      {{ form_start(addProjectForm, { 'attr': { 'id': 'formProjet' } }) }}
+      <div class="champ-groupe">
+        <label for="designation">Désignation</label>
+        {{ form_widget(addProjectForm.designation, { 'attr': { 'id': 'designation', 'class': 'champ-input' } }) }}
       </div>
-      
-      <!-- Corps de la boîte de dialogue -->
-      <div class="contenu-principal">
-        {{ form_start(addProjectForm, { 'attr': { 'id': 'formProjet' } }) }}
-          <div class="champ-groupe">
-            <label for="designation">Désignation</label>
-            {{ form_widget(addProjectForm.designation, { 'attr': { 'class': 'champ-input', 'id': 'designation', 'maxlength': 200 } }) }}
-          </div>
-          
-          <div class="champ-groupe">
-            <label for="date_debut">Date de début</label>
-            {{ form_widget(addProjectForm.date_debut, { 'attr': { 'class': 'champ-input', 'id': 'date_debut' } }) }}
-          </div>
-          
-          <div class="champ-groupe">
-            <label for="date_fin">Date de fin</label>
-            {{ form_widget(addProjectForm.date_fin, { 'attr': { 'class': 'champ-input', 'id': 'date_fin' } }) }}
-          </div>
-        {{ form_end(addProjectForm) }}
+      <div class="champ-groupe">
+        <label for="date_debut">Date de début</label>
+        {{ form_widget(addProjectForm.date_debut, { 'attr': { 'id': 'date_debut', 'class': 'champ-input' } }) }}
       </div>
-      
-      <!-- Pied de la boîte de dialogue -->
-      <div class="pied-modale">
-        <button type="button" class="bouton-fermer" data-dismiss="modale">Fermer</button>
-        <button type="submit" form="formProjet" class="bouton-nouveau">Nouveau</button>
+      <div class="champ-groupe">
+        <label for="date_fin">Date de fin</label>
+        {{ form_widget(addProjectForm.date_fin, { 'attr': { 'id': 'date_fin', 'class': 'champ-input' } }) }}
       </div>
+      {{ form_end(addProjectForm) }}
+    </div>
+    <div class="pied-modale">
+      <button type="button" class="bouton-fermer">Fermer</button>
+      <button type="submit" form="formProjet" class="bouton-nouveau">Créer</button>
     </div>
   </div>
 </div>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Sélectionne le lien qui ouvre la modale
-    const lienOuvrirModale = document.querySelector('.ouvrir-modale');
-    // Sélectionne la modale et le bouton de fermeture
-    const modale = document.querySelector('.fond-modale');
-    const boutonFermer = document.querySelector('.bouton-fermer');
-
-    // Lorsque tu cliques sur le lien, affiche la modale
-    lienOuvrirModale.addEventListener('click', function(event) {
-        event.preventDefault(); // Empêche le comportement par défaut du lien
-        modale.classList.add('afficher'); // Ajoute la classe pour afficher la modale
-    });
-
-    // fermer form
-    boutonFermer.addEventListener('click', function() {
-        modale.classList.remove('afficher'); 
-    });
-
-    // et
-    modale.addEventListener('click', function(event) {
-        if (event.target === modale) {
-            modale.classList.remove('afficher');
-        }
-    });
-});
-</script>
 {% endblock %}

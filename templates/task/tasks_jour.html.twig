@@ -2,7 +2,14 @@
 
 {% block title %}Calendrier des Tâches{% endblock %}
 
+{% block form %}
+    {% if is_manager %}
+        {% include 'Form/addTask.html.twig' %}
+    {% endif %}
+{% endblock %}
+
 {% block body %}
+<script src="{{ asset('js/tasks.js') }}"></script>
 <link href="{{ asset('styles/tasks_base.css') }}" rel="stylesheet"/>
 <div class="views">
     <h1 class="h1_tasks">Calendrier des tâches</h1>
@@ -50,7 +57,7 @@
                             {% if day.date %}
                                 <span class="date-number">{{ day.date|date('d') }}</span>
                                 {% for task in day.tasks %}
-                                    <div class="task {{ task.StatutTask }}">
+                                    <div class="task {{ task.StatutTask }}" id="task-{{ task.idTask }}">
                                         {{ task.description }} <br>
                                         date de fin : {{ task.dateFinTache|date('d-m-Y') }}
                                     </div>
@@ -66,43 +73,44 @@
 
 <script>
 
-    let currentYear = {{ currentYear }};
-    let currentMonth = {{ currentMonth }};
-    const monthYearSpan = document.getElementById("month-year");
+   let currentYear = {{ currentYear }};
+let currentMonth = {{ currentMonth }};
+const monthYearSpan = document.getElementById("month-year");
 
-    // affichage du mois et de l'année
-    function updateMonthYearDisplay() {
-        const monthNames = [
-            "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-            "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-        ];
-        monthYearSpan.textContent = `${currentYear} - ${monthNames[currentMonth - 1]}`;
+// affichage du mois et de l'année
+function updateMonthYearDisplay() {
+    const monthNames = [
+        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+    ];
+    monthYearSpan.textContent = `${currentYear} - ${monthNames[currentMonth - 1]}`;
+}
+
+// Gestion du clic sur le bouton "Précédent"
+document.getElementById("prev-button").addEventListener("click", (e) => {
+    e.preventDefault();
+    currentMonth -= 1;
+    if (currentMonth < 1) {
+        currentMonth = 12;
+        currentYear -= 1;
     }
+    window.location.href = `/tasks/jour/{{ project_id }}/${currentYear}/${currentMonth}`;
+});
 
-    // Gestion du clic sur le bouton "Précédent"
-    document.getElementById("prev-button").addEventListener("click", (e) => {
-        e.preventDefault();
-        currentMonth -= 1;
-        if (currentMonth < 1) {
-            currentMonth = 12;
-            currentYear -= 1;
-        }
-        window.location.href = `/tasks/jour/{{ project_id }}/${currentYear}/${currentMonth}`;
-    });
+// Gestion du clic sur le bouton "Suivant"
+document.getElementById("next-button").addEventListener("click", (e) => {
+    e.preventDefault(); 
+    currentMonth += 1;
+    if (currentMonth > 12) {
+        currentMonth = 1;
+        currentYear += 1;
+    }
+    window.location.href = `/tasks/jour/{{ project_id }}/${currentYear}/${currentMonth}`;
+});
 
-    // Gestion du clic sur le bouton "Suivant"
-    document.getElementById("next-button").addEventListener("click", (e) => {
-        e.preventDefault(); 
-        currentMonth += 1;
-        if (currentMonth > 12) {
-            currentMonth = 1;
-            currentYear += 1;
-        }
-        window.location.href = `/tasks/jour/{{ project_id }}/${currentYear}/${currentMonth}`;
-    });
+// Affichage initial
+updateMonthYearDisplay();
 
-    // Affichage initial
-    updateMonthYearDisplay();
 </script>
 </main>
 

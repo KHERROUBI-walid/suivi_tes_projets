@@ -1,0 +1,70 @@
+{% block body %}
+<link href="{{ asset('styles/formulaire.css') }}" rel="stylesheet" />
+
+<div class="fond-modale" id="modaleTache">
+  <div class="contenu-modale">
+    <div class="en-tete">
+      <h5 class="titre-modale">Ajouter une tâche</h5>
+      <button type="button" class="bouton-fermer" aria-label="Fermer">&times;</button>
+    </div>
+    <div class="contenu-principal">
+        {{ form_start(addTaskForm, { 'attr': { 'id': 'formTache', 'action': path('add-task', { 'project_id': project_id }) } }) }}
+      <div class="champ-groupe">
+        <label for="description">Description</label>
+        {{ form_widget(addTaskForm.description, { 'attr': { 'id': 'description', 'class': 'champ-input' } }) }}
+      </div>
+      <div class="champ-groupe">
+        <label for="date_debut_tache">Date de début</label>
+        {{ form_widget(addTaskForm.date_debut_tache, { 'attr': { 'id': 'date_debut_tache', 'class': 'champ-input' } }) }}
+      </div>
+      <div class="champ-groupe">
+        <label for="date_fin_tache">Date de fin</label>
+        {{ form_widget(addTaskForm.date_fin_tache, { 'attr': { 'id': 'date_fin_tache', 'class': 'champ-input' } }) }}
+      </div>
+      {{ form_end(addTaskForm) }}
+    </div>
+    <div class="pied-modale">
+      <button type="button" class="bouton-fermer">Fermer</button>
+      <button type="submit" form="formTache" class="bouton-nouveau">Créer</button>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Sélection de tous les liens qui ouvrent une modale
+    const modaleLinks = document.querySelectorAll('[data-open-modale]');
+    const fermerBoutons = document.querySelectorAll('.bouton-fermer');
+
+    modaleLinks.forEach(link => {
+        const modaleId = link.getAttribute('data-open-modale');
+        const modale = document.getElementById(modaleId);
+
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (modale) {
+                modale.classList.add('afficher');
+            }
+        });
+    });
+
+    fermerBoutons.forEach(bouton => {
+        bouton.addEventListener('click', function () {
+            const modale = bouton.closest('.fond-modale');
+            if (modale) {
+                modale.classList.remove('afficher');
+            }
+        });
+    });
+
+    // Masquer la modale en cliquant à l'extérieur du contenu
+    document.querySelectorAll('.fond-modale').forEach(modale => {
+        modale.addEventListener('click', function (e) {
+            if (e.target === modale) {
+                modale.classList.remove('afficher');
+            }
+        });
+    });
+});
+
+</script>
+{% endblock %}

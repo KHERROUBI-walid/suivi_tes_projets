@@ -208,9 +208,9 @@ button:hover a{
 
 /* Survol des jours et boutons */
 .day:hover {
-    background-color: #343434;  /* couleur de fond pour survol */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* ajout d'une ombre subtile */
-    transform: scale(1.05); /* Agrandissement du jour au survol */
+    background-color: #343434;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05); 
 }
 
 .light-mode .day:hover {
@@ -222,3 +222,17 @@ button:hover a{
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/****nouvelle tache ***************/
+.highlight {
+    transform: scale(1.10); 
+    background-color: #fef8df;
+    color: black;
+    transition: background-color 0.5s ease;
+}
+
+.highlight .task {
+    color: #333;
+    transition: background-color 0.3s ease;
+}
+

@@ -61,14 +61,17 @@
         
         <nav>
             <ul>
-              {% if is_granted("ROLE_MANAGER") %}
-                <li><a href="{{ path('app_projects_manager') }}" class="active">Projets</a></li>
-                <li><a href="#" class="ouvrir-modale">Ajouter un projet</a></li>
-                <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                <li><a href="{{ path('app_projects') }}" class="{{ app.request.attributes.get('_route') starts with 'app_projects' ? 'active' : '' }}">Projets</a></li>
+                <li><a href="" class="{{ app.request.attributes.get('_route') starts with 'app_tasks' ? 'active' : '' }}">Tâches</a></li>
+                {% if is_granted("ROLE_MANAGER") %}
+                   {% if app.request.attributes.get('_route') == 'app_projects_manager' %}
+                    <li><a href="#" data-open-modale="modaleProjet" class="ouvrir-modale">Ajouter un projet</a></li>
+                   {% endif %}
 
-              {% else %}
-                <li><a href="{{ path('app_projects') }}" class="active">Projets</a></li>
-              {% endif %}
+                   {% if app.request.attributes.get('_route') starts with 'app_tasks' %}
+                    <li><a href="#" data-open-modale="modaleTache" class="ouvrir-modale">Ajouter une tâche</a></li>
+                   {% endif %}
+                {% endif %}
             </ul>
         </nav>
     </div>
@@ -87,19 +90,26 @@
                 {% endif %}
             </div>
         </header>
-    <!--
+
         <nav class="sub-navigation">
              <ul>
-                <li><a href="{{ path('app_projects') }}" class="active">Projets</a></li>
+                <li><a href="{{ path('app_projects') }}" class="{{ app.request.attributes.get('_route') starts with 'app_projects' ? 'active' : '' }}">Projets</a></li>
+                <li><a href="" class="{{ app.request.attributes.get('_route') starts with 'app_tasks' ? 'active' : '' }}">Tasks</a></li>
                 {% if is_granted("ROLE_MANAGER") %}
-                 <li><a href="" data-toggle="modal" data-target="#addProjectModal">Ajouter un projet</a></li>
+                   {% if app.request.attributes.get('_route') == 'app_projects_manager' %}
+                    <li><a href="#" data-open-modale="modaleProjet" class="ouvrir-modale">Ajouter un projet</a></li>
+                   {% endif %}
+
+                   {% if app.request.attributes.get('_route') starts with 'app_tasks' %}
+                    <li><a href="#" data-open-modale="modaleTache" class="ouvrir-modale">Ajouter une tâche</a></li>
+                   {% endif %}
                 {% endif %}
             </ul>
-        </nav> -->
+        </nav>
 
         <!-- Main Body Content -->
         {% block body %}{% endblock %}
-        
+        {% block form %}{% endblock %}
     </div>
 
 </body>
