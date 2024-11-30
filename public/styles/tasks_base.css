@@ -206,6 +206,14 @@ button:hover a{
     transition: background-color 0.3s ease;
 }
 
+
+.task img:hover {
+    cursor: pointer;
+    border-radius: 10px;
+    background-color: #a1e4ff;
+    transform: scale(1.05); 
+}
+
 /* Survol des jours et boutons */
 .day:hover {
     background-color: #343434;
@@ -236,3 +244,63 @@ button:hover a{
     transition: background-color 0.3s ease;
 }
 
+/********* */
+
+/* Styles pour la popup */
+.popup {
+    position: absolute;
+    background-color: #ffffff;
+    color: #333;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    border-radius: 8px;
+    width: 180px;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    z-index: 1000;
+}
+
+.popup-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-select {
+    width: 110px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+.popup-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.popup-btn:hover {
+    background-color: #0056b3;
+}
+
+.popup img {
+    width: 50px;
+    cursor: pointer;
+}
+
+.task .popup img:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+/* Affichage de la popup */
+.show-popup .popup,
+.show-popup .popup-overlay {
+    display: block;
+}
