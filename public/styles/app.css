@@ -4,6 +4,9 @@
     padding: 0;
     box-sizing: border-box;
 }
+button {
+    all: unset;
+}
 
 body {
     font-family: 'Roboto', sans-serif;
@@ -16,7 +19,7 @@ body {
 
 body.light-mode {
     font-family: 'Roboto', sans-serif;
-    background: url('/images/image7.jpg') no-repeat center center fixed;
+    background: url('/images/img2.jpg') no-repeat center center fixed;
     background-size: cover; 
     color: #121212; 
 }
@@ -63,14 +66,16 @@ nav ul li a {
 }
 
 body.light-mode nav ul li a {
-    color: #333; 
+    color: #333;
 }
 
+nav ul li a.active,
 nav ul li a:hover {
     background-color: #2a2a2a;
     color: white;
 }
 
+body.light-mode nav ul li a.active,
 body.light-mode nav ul li a:hover {
     background-color: #f0f0f0;
 }
@@ -146,8 +151,12 @@ body.light-mode .sub-navigation ul li a {
     border-bottom: 2px solid #61dafb;
 }
 
-body.light-mode .sub-navigation ul li a.active,
-body.light-mode .sub-navigation ul li a:hover {
-    color: #007bff; 
+body.light-mode .sub-navigation ul li a.active{
+    color: #181818; 
     border-bottom: 2px solid #0056b3; 
+}
+
+
+body.light-mode .sub-navigation ul li a:hover{
+    color: #619efb;
 }

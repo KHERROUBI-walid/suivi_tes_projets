@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ProjectsController extends AbstractController
 {
     #[Route('/projects', name: 'app_projects', methods: ['GET'])]
-    public function userProjects(
+    public function displayProjects(
         ProjectRepository $projectRepository,
         TaskRepository $taskRepository,
         EntityManagerInterface $entityManager
@@ -63,10 +63,8 @@ class ProjectsController extends AbstractController
             throw $this->createAccessDeniedException('Accès réservé aux gestionnaires.');
         }
 
-        // Récupérer les projets liés au gestionnaire
         $projects = $projectRepository->findByManager($user->getId());
 
-        // Mise à jour des statuts des projets
         foreach ($projects as $project) {
             $this->updateProjectStatus($project, $taskRepository, $entityManager);
         }
@@ -141,13 +139,11 @@ class ProjectsController extends AbstractController
             throw $this->createAccessDeniedException('Invalid CSRF token.');
         }
 
-        // Récupération du projet
         $project = $entityManager->getRepository(Project::class)->find($project_id);
         if (!$project) {
             throw $this->createNotFoundException('Le projet n’existe pas.');
         }
 
-        // Suppression
         $entityManager->remove($project);
         $entityManager->flush();
 

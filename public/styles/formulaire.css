@@ -1,34 +1,34 @@
-/* Style de l'arrière-plan sombre qui couvre toute la page quand la modale est ouverte */
+/* Fond sombre partagé */
 .fond-modale {
-    display: none; 
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
+    background-color: rgba(0, 0, 0, 0.7); /* Réduction de la luminosité */
     z-index: 1000;
     justify-content: center;
     align-items: center;
-    animation: apparaitre 0.5s ease-out; 
+    animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Boîte de dialogue principale */
+/* Conteneur principal générique */
 .contenu-modale {
     position: relative;
     background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     width: 500px;
     max-width: 90%;
-    animation: descendre 0.6s ease-out; /* Animation de descente */
+    animation: slideDown 0.6s ease-in-out;
     z-index: 1001;
+    overflow: hidden;
 }
 
-/* En-tête de la boîte de dialogue */
+/* En-tête générique */
 .en-tete {
-    background-color: #343a40;
+    background-color: #4a5568; /* Couleur sombre moderne */
     color: #ffffff;
     padding: 15px 20px;
     display: flex;
@@ -39,15 +39,11 @@
 .titre-modale {
     margin: 0;
     font-size: 1.5rem;
+    font-weight: bold;
 }
 
-label {
-    color: black;
-    margin-bottom: 10px;
-}
-
-/* Bouton de fermeture personnalisé */
-.fermer-bouton {
+/* Bouton de fermeture partagé */
+.bouton-fermer {
     background: none;
     border: none;
     font-size: 1.2rem;
@@ -55,17 +51,10 @@ label {
     cursor: pointer;
 }
 
-/* Corps de la boîte de dialogue */
+/* Corps générique */
 .contenu-principal {
     padding: 20px;
-    background-color: #f8f9fa;
-}
-
-/* Pied de la boîte de dialogue */
-.pied-modale {
-    padding: 10px 20px;
-    background-color: #e9ecef;
-    text-align: right;
+    background-color: #f9fafb;
 }
 
 /* Champs de formulaire */
@@ -73,43 +62,70 @@ label {
     margin-bottom: 15px;
 }
 
+label {
+    color: #2d3748;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+}
+
 .champ-input {
     width: 100%;
     padding: 10px;
     font-size: 1rem;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
     box-sizing: border-box;
+    transition: border-color 0.3s;
 }
 
-/* Boutons personnalisés */
+.champ-input:focus {
+    border-color: #3182ce;
+    outline: none;
+    box-shadow: 0 0 5px rgba(49, 130, 206, 0.3);
+}
+
+/* Pied générique */
+.pied-modale {
+    padding: 15px 20px;
+    background-color: #edf2f7;
+    text-align: right;
+}
+
+/* Boutons */
 .bouton-nouveau {
-    background-color: #007bff;
+    background-color: #3182ce;
     color: #ffffff;
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-size: 0.9rem;
     cursor: pointer;
-    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.bouton-nouveau:hover {
+    background-color: #2b6cb0;
 }
 
 .bouton-fermer {
-    background-color: #6c757d;
+    background-color: #a0aec0;
     color: #ffffff;
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-size: 0.9rem;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-/* Effets au survol */
-.bouton-nouveau:hover,
 .bouton-fermer:hover {
-    opacity: 0.8;
+    background-color: #718096;
 }
 
 /* Animations */
-@keyframes descendre {
+@keyframes slideDown {
     0% {
         transform: translateY(-100%);
     }
@@ -118,7 +134,7 @@ label {
     }
 }
 
-@keyframes apparaitre {
+@keyframes fadeIn {
     0% {
         opacity: 0;
     }

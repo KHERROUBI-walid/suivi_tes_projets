@@ -2,84 +2,98 @@
 
 namespace App\Controller;
 
+use App\Entity\Task;
+use App\Form\AddTaskType;
+use App\Repository\ProjectRepository;
 use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class TaskController extends AbstractController
 {
     #[Route('/tasks/jour/{project_id}/{year}/{month}', name: 'app_tasks_day', defaults: ['year' => null, 'month' => null])]
-    public function index(TaskRepository $taskRepository, int $project_id, ?int $year, ?int $month): Response
-    {
-        // Si l'année et le mois ne sont pas fournis, on utilise le mois et l'année actuels
-        $currentDate = new DateTime();
-        $year = $year ?? (int)$currentDate->format('Y');
-        $month = $month ?? (int)$currentDate->format('m');
-        
-        // Calcul de la date de début du mois et de la fin du mois
-        $startDate = new DateTime("$year-$month-01");
-        $endDate = clone $startDate;
-        $endDate->modify('last day of this month');
+public function index(TaskRepository $taskRepository, int $project_id, ?int $year, ?int $month): Response
+{
+    $currentDate = new DateTime();
+    $year = $year ?? (int)$currentDate->format('Y');
+    $month = $month ?? (int)$currentDate->format('m');
+    
+    $startDate = new DateTime("$year-$month-01");
+    $endDate = clone $startDate;
+    $endDate->modify('last day of this month');
 
-        // Récupération des tâches pour la plage de dates spécifique
-        $tasks = $taskRepository->findTasksByDateRange($project_id, $startDate, $endDate);
+    $tasks = $taskRepository->findTasksByDateRange($project_id, $startDate, $endDate);
 
-        // Génération du calendrier avec les tâches
-        $calendar = $this->generateCalendar($startDate, $tasks);
+    $calendar = $this->generateCalendar($startDate, $tasks);
 
-        return $this->render('task/tasks_jour.html.twig', [
-            'calendar' => $calendar,
-            'currentMonth' => $month,
-            'currentYear' => $year,
+    // Créer un formulaire vierge pour l'affichage
+    $form = $this->createForm(AddTaskType::class);
+
+    return $this->render('task/tasks_jour.html.twig', [
+        'calendar' => $calendar,
+        'currentMonth' => $month,
+        'currentYear' => $year,
+        'project_id' => $project_id,
+        'addTaskForm' => $form->createView(),
+        'is_manager' => true,
+        'new_task' => null,
+    ]);
+}
+
+
+#[Route('/tasks/ajouter-tache/{project_id}', name: 'add-task', methods: ['POST'])]
+public function addTask(
+    Request $request, 
+    EntityManagerInterface $entityManager,
+    ProjectRepository $projectRepository,
+    int $project_id
+): Response {
+    // Récupération du projet
+    $project = $projectRepository->find($project_id);
+    if (!$project) {
+        throw $this->createNotFoundException('Projet non trouvé.');
+    }
+
+    // Traitement du formulaire
+    $task = new Task();
+    $form = $this->createForm(AddTaskType::class, $task);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $task->setProject($project);
+        $task->setStatutTask('pas_commence');
+        $entityManager->persist($task);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Tâche ajoutée avec succès.');
+
+        $dateCible = $task->getDateDebutTache();
+        $year = (int)$dateCible->format('Y');
+        $month = (int)$dateCible->format('m');
+
+        $new_task = $task->getIdTask();
+
+        return $this->redirectToRoute('app_tasks_day', [
             'project_id' => $project_id,
+            'year' => $year,
+            'month' => $month,
+            'new_task' => $new_task,
         ]);
     }
 
-    private function generateCalendar(DateTime $startDate, array $tasks): array
-    {
-        $calendar = [];
-        $firstDayOfMonth = (int)$startDate->format('N'); // 1 (Lundi) à 7 (Dimanche)
-        $daysInMonth = (int)$startDate->format('t');
-        $currentDay = 1;
+    // Redirection en cas d'échec (reste sur la page actuelle)
+    return $this->redirectToRoute('app_tasks_day', [
+        'project_id' => $project_id,
+    ]);
+}
 
-        // Boucle sur chaque semaine (6 semaines maximum pour s'adapter aux mois longs)
-        for ($week = 0; $week < 6; $week++) {
-            $weekData = [];
-
-            // Boucle sur chaque jour de la semaine
-            for ($day = 1; $day <= 7; $day++) {
-                if (($week === 0 && $day < $firstDayOfMonth) || $currentDay > $daysInMonth) {
-                    // Si le jour est avant le début du mois ou après la fin du mois, on crée une cellule vide
-                    $weekData[] = ['date' => null, 'tasks' => []];
-                } else {
-                    // Sinon, on crée la date pour le jour actuel
-                    $date = (clone $startDate)->setDate($startDate->format('Y'), $startDate->format('m'), $currentDay);
-                    
-                    // Filtre les tâches pour le jour actuel
-                    $tasksForDay = array_filter($tasks, function($task) use ($date) {
-                        return $task->getDateDebutTache()->format('Y-m-d') === $date->format('Y-m-d');
-                    });
-                    
-                    // Ajoute le jour avec ses tâches au tableau de la semaine
-                    $weekData[] = ['date' => $date, 'tasks' => $tasksForDay];
-                    $currentDay++;
-                }
-            }
-            // Ajoute la semaine au calendrier
-            $calendar[] = $weekData;
-            
-            // Si tous les jours du mois ont été affichés, on arrête la boucle
-            if ($currentDay > $daysInMonth) break;
-        }
-
-        return $calendar;
-    }
 
     #[Route('/tasks/semaine/{project_id}', name: 'app_tasks_week')]
-public function calendarView(
+    public function calendarView(
     int $project_id,
     Request $request,
     TaskRepository $taskRepository
@@ -89,11 +103,11 @@ public function calendarView(
 
     // Calculer la date actuelle
     $currentDate = new \DateTime();
-    $currentDate->modify('monday this week');  // Commencer à partir du lundi de la semaine actuelle
+    $currentDate->modify('monday this week'); 
 
     // Calculer la page qui contient la semaine actuelle
-    $startDate = new \DateTime('2023-01-01'); // Début de la première page (1er janvier 2023)
-    $startDate->modify('monday this week');  // Début de la première semaine de l'année 2023
+    $startDate = new \DateTime('2023-01-01'); 
+    $startDate->modify('monday this week'); 
 
     // Calculer le nombre de semaines entre le début de l'année et la semaine actuelle
     $interval = $startDate->diff($currentDate);
@@ -113,15 +127,13 @@ public function calendarView(
     $endDate = clone $startDate;
     $endDate->modify('+' . ($weeksPerPage - 1) . ' weeks')->modify('sunday this week'); // Fin de la période (8 semaines après)
 
-    // Récupérer les tâches pour cette plage de dates
     $tasks = $taskRepository->findTasksByDateRange($project_id, $startDate, $endDate);
 
-    // Organiser les tâches par semaines
     $weeks = [];
     $currentWeek = clone $startDate;
     while ($currentWeek <= $endDate) {
         $weekKey = $currentWeek->format('Y-m-d');
-        $weeks[$weekKey] = []; // Par défaut, aucune tâche
+        $weeks[$weekKey] = [];
         $currentWeek->modify('+1 week');
     }
 
@@ -139,41 +151,40 @@ public function calendarView(
     ]);
 }
 
-
 #[Route('/tasks/mois/{project_id}', name: 'app_tasks_month')]
 public function monthlyCalendarView(
     int $project_id,
     Request $request,
     TaskRepository $taskRepository
 ): Response {
-    // Nombre de mois par page
+   
     $monthsPerPage = 4;
 
-    // Calculer la date actuelle
+    
     $currentDate = new \DateTime();
-    $currentDate->modify('first day of this month');  // Commence à partir du premier jour du mois actuel
+    $currentDate->modify('first day of this month'); 
+    
 
-    // Calculer la page qui contient le mois actuel
-    $startDate = new \DateTime('2023-01-01'); // Début de la première page (1er janvier 2023)
-    $startDate->modify('first day of this month');  // Commence à partir du premier jour du mois de janvier 2023
+    $startDate = new \DateTime('2023-01-01'); 
+    $startDate->modify('first day of this month'); 
 
     // Calculer le nombre de mois entre le début de l'année et le mois actuel
     $interval = $startDate->diff($currentDate);
-    $monthsSinceStart = (int)($interval->format('%a') / 30); // Convertir les jours en mois (approximativement)
+    $monthsSinceStart = (int)($interval->format('%a') / 30); 
 
     // Calculer la page en fonction des mois écoulés
     $page = (int)floor($monthsSinceStart / $monthsPerPage) + 1;
 
     // Obtenir la page demandée via la requête si elle existe, sinon utiliser la page calculée
     $page = $request->query->getInt('page', $page);
-
+    
     // Calculer la date de début et de fin en fonction de la page
     $startDate = (new \DateTime('2023-01-01'))
         ->modify('first day of this month')
         ->modify('+' . (($page - 1) * $monthsPerPage) . ' months');
 
     $endDate = clone $startDate;
-    $endDate->modify('+' . ($monthsPerPage - 1) . ' months'); // Fin de la période (4 mois après)
+    $endDate->modify('+' . ($monthsPerPage - 1) . ' months'); 
 
     // Récupérer les tâches pour cette plage de dates
     $tasks = $taskRepository->findTasksByDateRange($project_id, $startDate, $endDate);
@@ -183,7 +194,7 @@ public function monthlyCalendarView(
     $currentMonth = clone $startDate;
     while ($currentMonth <= $endDate) {
         $monthKey = $currentMonth->format('Y-m');
-        $months[$monthKey] = []; // Par défaut, aucune tâche
+        $months[$monthKey] = []; 
         $currentMonth->modify('+1 month');
     }
 
@@ -203,4 +214,38 @@ public function monthlyCalendarView(
 
 
 
+
+/*---------------------------------------- fonctions ------------------------------------------------------*/
+private function generateCalendar(DateTime $startDate, array $tasks): array
+{
+    $calendar = [];
+    $firstDayOfMonth = (int)$startDate->format('N'); 
+    $daysInMonth = (int)$startDate->format('t');
+    $currentDay = 1;
+
+    for ($week = 0; $week < 6; $week++) {
+        $weekData = [];
+
+        // Boucle sur chaque jour de la semaine
+        for ($day = 1; $day <= 7; $day++) {
+            if (($week === 0 && $day < $firstDayOfMonth) || $currentDay > $daysInMonth) {
+              
+                $weekData[] = ['date' => null, 'tasks' => []];
+            } else {
+                $date = (clone $startDate)->setDate($startDate->format('Y'), $startDate->format('m'), $currentDay);
+                $tasksForDay = array_filter($tasks, function($task) use ($date) {
+                    return $task->getDateDebutTache()->format('Y-m-d') === $date->format('Y-m-d');
+                });
+                
+                $weekData[] = ['date' => $date, 'tasks' => $tasksForDay];
+                $currentDay++;
+            }
+        }
+        $calendar[] = $weekData;
+
+        if ($currentDay > $daysInMonth) break;
+    }
+
+    return $calendar;
+}
 }
