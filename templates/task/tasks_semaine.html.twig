@@ -1,5 +1,11 @@
 {% extends 'base.html.twig' %}
 
+{% block form %}
+    {% if is_manager %}
+        {% include 'Form/addTask.html.twig' %}
+    {% endif %}
+{% endblock %}
+
 {% block body %}
 <link href="{{ asset('styles/tasks_base.css') }}" rel="stylesheet"/>
 <link rel="stylesheet" href="{{ asset('/styles/tasks_semaine.css') }}">

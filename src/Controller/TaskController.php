@@ -144,10 +144,15 @@ public function addTask(
         }
     }
 
+    // Créer un formulaire vierge pour l'affichage
+    $form = $this->createForm(AddTaskType::class);
+
     return $this->render('task/tasks_semaine.html.twig', [
         'weeks' => $weeks,
         'page' => $page,
         'project_id' => $project_id,
+        'addTaskForm' => $form->createView(),
+        'is_manager' => true,
     ]);
 }
 
@@ -205,10 +210,15 @@ public function monthlyCalendarView(
         }
     }
 
+    // Créer un formulaire vierge pour l'affichage
+    $form = $this->createForm(AddTaskType::class);
+
     return $this->render('task/tasks_mois.html.twig', [
         'months' => $months,
         'page' => $page,
         'project_id' => $project_id,
+        'addTaskForm' => $form->createView(),
+        'is_manager' => true,
     ]);
 }
 
