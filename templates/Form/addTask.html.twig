@@ -1,5 +1,6 @@
 {% block body %}
 <link href="{{ asset('styles/formulaire.css') }}" rel="stylesheet" />
+<script src="{{ asset('js/form.js') }}"></script>
 
 <div class="fond-modale" id="modaleTache">
   <div class="contenu-modale">
@@ -29,42 +30,4 @@
     </div>
   </div>
 </div>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Sélection de tous les liens qui ouvrent une modale
-    const modaleLinks = document.querySelectorAll('[data-open-modale]');
-    const fermerBoutons = document.querySelectorAll('.bouton-fermer');
-
-    modaleLinks.forEach(link => {
-        const modaleId = link.getAttribute('data-open-modale');
-        const modale = document.getElementById(modaleId);
-
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            if (modale) {
-                modale.classList.add('afficher');
-            }
-        });
-    });
-
-    fermerBoutons.forEach(bouton => {
-        bouton.addEventListener('click', function () {
-            const modale = bouton.closest('.fond-modale');
-            if (modale) {
-                modale.classList.remove('afficher');
-            }
-        });
-    });
-
-    // Masquer la modale en cliquant à l'extérieur du contenu
-    document.querySelectorAll('.fond-modale').forEach(modale => {
-        modale.addEventListener('click', function (e) {
-            if (e.target === modale) {
-                modale.classList.remove('afficher');
-            }
-        });
-    });
-});
-
-</script>
 {% endblock %}

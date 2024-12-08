@@ -13,6 +13,9 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TaskController extends AbstractController
 {
@@ -42,6 +45,7 @@ class TaskController extends AbstractController
             'addTaskForm' => $form->createView(),
             'is_manager' => true,
             'target_task' => null,
+            'lien_clique' => false,
         ]);
     }
 
@@ -72,6 +76,7 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'Tâche ajoutée avec succès.');
 
+            //- Pour Centrer le calendrier au nouvelle tache
             $dateCible = $task->getDateDebutTache();
             $year = (int)$dateCible->format('Y');
             $month = (int)$dateCible->format('m');
@@ -93,13 +98,85 @@ class TaskController extends AbstractController
     }
 
 
+    #[Route('/task/{id}/edit', name: 'edit-task')]
+    public function editTask(Request $request, Task $task, EntityManagerInterface $entityManager): Response
+{
+    // Récupérer l'URL de retour (si elle existe)
+    $returnUrl = $request->query->get('return_url');
+
+
+    // Lier l'entité Task au formulaire
+    $form = $this->createForm(AddTaskType::class, $task);
+    $form->handleRequest($request);
+
+    $project_id = $task->getProject()->getIdProject();
+    
+    if ($form->isSubmitted() && $form->isValid()) {
+
+        //- Pour Centrer le calendrier au tache tache modifié
+        $dateCible = $task->getDateDebutTache();
+        $year = (int)$dateCible->format('Y');
+        $month = (int)$dateCible->format('m');     
+
+        $entityManager->persist($task);
+        $entityManager->flush();
+
+        
+        return $this->redirectToRoute('app_tasks_day', [
+            'project_id' => $project_id,
+            'target_task' => $task->getIdTask(),
+            'year' => $year,
+            'month' => $month,
+        ]);
+    }
+
+    
+    return $this->render('Form/editTask.html.twig', [
+        'project_id' => $project_id,
+        'lien_clique' => true,
+        'editTaskForm' => $form->createView(),
+        'idTask' => $task->getIdTask(),
+        'return_url' => $returnUrl,
+    ]);
+}
+
+
+#[IsGranted('ROLE_MANAGER')]
+#[Route('/projects/manager/delete/{project_id}', name: 'project_delete', methods: ['POST'])]
+    public function delete(
+        int $project_id, 
+        Request $request, 
+        EntityManagerInterface $entityManager, 
+        CsrfTokenManagerInterface $csrfTokenManager
+    ): Response {
+        // Vérification du token CSRF
+        $token = $request->request->get('_token');
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('delete_project_' . $project_id, $token))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
+        $project = $entityManager->getRepository(Task::class)->find($project_id);
+        if (!$project) {
+            throw $this->createNotFoundException('Le projet n’existe pas.');
+        }
+
+        $entityManager->remove($project);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Projet supprimé avec succès.');
+
+        return $this->redirectToRoute('app_projects_manager');
+    }
+
+
+
     #[Route('/tasks/semaine/{project_id}', name: 'app_tasks_week')]
     public function calendarView(
     int $project_id,
     Request $request,
     TaskRepository $taskRepository
     ): Response {
-    // Nombre de semaines par page
+        
     $weeksPerPage = 8;
 
     // Calculer la date actuelle

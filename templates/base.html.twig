@@ -65,11 +65,11 @@
                 <li><a href="" class="{{ app.request.attributes.get('_route') starts with 'app_tasks' ? 'active' : '' }}">Tâches</a></li>
                 {% if is_granted("ROLE_MANAGER") %}
                    {% if app.request.attributes.get('_route') == 'app_projects_manager' %}
-                    <li><a href="#" data-open-modale="modaleProjet" class="ouvrir-modale">Ajouter un projet</a></li>
+                    <li><a href="" data-open-modale="modaleProjet" class="ouvrir-modale">Ajouter un projet</a></li>
                    {% endif %}
 
                    {% if app.request.attributes.get('_route') starts with 'app_tasks' %}
-                    <li><a href="#" data-open-modale="modaleTache" class="ouvrir-modale">Ajouter une tâche</a></li>
+                    <li><a href="" data-open-modale="modaleTache" class="ouvrir-modale">Ajouter une tâche</a></li>
                    {% endif %}
                 {% endif %}
             </ul>
