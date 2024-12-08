@@ -28,7 +28,7 @@
 
 /* En-tête générique */
 .en-tete {
-    background-color: #4a5568; /* Couleur sombre moderne */
+    background-color: #954eff;
     color: #ffffff;
     padding: 15px 20px;
     display: flex;
@@ -95,7 +95,7 @@ label {
 
 /* Boutons */
 .bouton-nouveau {
-    background-color: #3182ce;
+    background-color: #954eff;
     color: #ffffff;
     padding: 10px 20px;
     border: none;
@@ -110,7 +110,7 @@ label {
 }
 
 .bouton-fermer {
-    background-color: #a0aec0;
+    background-color: #310068;
     color: #ffffff;
     padding: 10px 20px;
     border: none;

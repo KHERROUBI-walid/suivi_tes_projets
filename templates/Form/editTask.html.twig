@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<link href="{{ asset('styles/formulaire.css') }}" rel="stylesheet" />
+<script src="{{ asset('js/form.js') }}"></script>
+
+<div class="fond-modale" id="modaleEditTache">
+  <div class="contenu-modale">
+    <div class="en-tete">
+      <h5 class="titre-modale">Modifier une tâche</h5>
+      <a href="{{ return_url }}"><button type="button" class="bouton-fermer">&times;</button></a>
+
+    </div>
+    <div class="contenu-principal">
+     
+    {{ form(editTaskForm, { 'action': path('edit-task', { 'id': idTask }), 'attr': { 'id': 'formEditTache' } }) }}
+
+
+    <div class="pied-modale">
+      <a href="{{ return_url }}"><button type="button" class="bouton-fermer">Fermer</button></a>
+      <button type="submit" form="formEditTache" class="bouton-nouveau">Modifier</button>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -5,7 +5,8 @@
 {% block form %}
     {% if is_manager %}
         {% include 'Form/addTask.html.twig' %}
-    {% endif %}
+    {% endif %}-
+
 {% endblock %}
 
 {% block body %}
@@ -58,7 +59,10 @@
                                 <span class="date-number">{{ day.date|date('d') }}</span>
                                 {% for task in day.tasks %}
                                     <div class="task {{ task.StatutTask }}" id="task-{{ task.idTask }}">
+
+                                        {% if is_granted("ROLE_MANAGER") %}
                                         <img src="{{ asset('/images/icons/progress.png') }}" width="50px" onclick="openPopup({{ task.idTask }})"></img>
+
                                         <!-- Menu popup -->
                                         <div id="popup-{{ task.idTask }}" class="popup" style="display: none;">
                                             <div class="popup-content">
@@ -73,11 +77,13 @@
                                                 </form>
                                             </div>
                                         </div>
+                                  <a href="{{ path('edit-task', {'id': task.idTask, 'return_url': app.request.uri}) }}">
+                                        {% endif %}
                                         <div>
                                             <p> {{ task.description }} </p>
                                             <p> date de fin : {{ task.dateFinTache|date('d-m-Y') }} </p>
                                         </div>
-
+                                  </a>
                                     </div>
                                 {% endfor %}
                             {% endif %}

@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Ajouter la classe "afficher" par défaut si l'élément a l'id "modaleEditTache"
+    const modaleEditTache = document.getElementById('modaleEditTache');
+    if (modaleEditTache) {
+        modaleEditTache.classList.add('afficher');
+    }
+
     // Sélection de tous les liens qui ouvrent une modale
     const modaleTriggers = document.querySelectorAll('[data-open-modale]');
     const fermerBoutons = document.querySelectorAll('.bouton-fermer');
