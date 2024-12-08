@@ -223,6 +223,17 @@ class TaskController extends AbstractController
         ]);
     }
 
+    // Créer un formulaire vierge pour l'affichage
+    $form = $this->createForm(AddTaskType::class);
+
+    return $this->render('task/tasks_mois.html.twig', [
+        'months' => $months,
+        'page' => $page,
+        'project_id' => $project_id,
+        'addTaskForm' => $form->createView(),
+        'is_manager' => true,
+    ]);
+}
 
 
     #[Route('project/{project_id}/task/status/{id}', name: "change_task_status", methods: ['POST'])]
