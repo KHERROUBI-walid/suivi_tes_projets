@@ -98,6 +98,7 @@ class TaskController extends AbstractController
     }
 
 
+    #[IsGranted('ROLE_MANAGER')]
     #[Route('/task/{id}/edit', name: 'edit-task')]
     public function editTask(Request $request, Task $task, EntityManagerInterface $entityManager): Response
 {
@@ -140,32 +141,43 @@ class TaskController extends AbstractController
     ]);
 }
 
-
 #[IsGranted('ROLE_MANAGER')]
-#[Route('/projects/manager/delete/{project_id}', name: 'project_delete', methods: ['POST'])]
-    public function delete(
-        int $project_id, 
+#[Route('/task/{task_id}/delete', name: 'task_delete', methods: ['POST'])]
+    public function deleteTask(
+        int $task_id, 
         Request $request, 
         EntityManagerInterface $entityManager, 
         CsrfTokenManagerInterface $csrfTokenManager
     ): Response {
         // Vérification du token CSRF
         $token = $request->request->get('_token');
-        if (!$csrfTokenManager->isTokenValid(new CsrfToken('delete_project_' . $project_id, $token))) {
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('delete_task_' . $task_id, $token))) {
             throw $this->createAccessDeniedException('Invalid CSRF token.');
         }
 
-        $project = $entityManager->getRepository(Task::class)->find($project_id);
-        if (!$project) {
+        $task = $entityManager->getRepository(Task::class)->find($task_id);
+        if (!$task) {
             throw $this->createNotFoundException('Le projet n’existe pas.');
         }
 
-        $entityManager->remove($project);
+        $entityManager->remove($task);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Projet supprimé avec succès.');
+        $this->addFlash('success', 'Tache supprimé avec succès.');
 
-        return $this->redirectToRoute('app_projects_manager');
+        $project_id = $task->getProject()->getIdProject();
+
+        //- Pour Centrer le calendrier au tache tache modifié
+        $dateCible = $task->getDateDebutTache();
+        $year = (int)$dateCible->format('Y');
+        $month = (int)$dateCible->format('m');
+
+        return $this->redirectToRoute('app_tasks_day', [
+            'project_id' => $project_id,
+            'target_task' => $task->getIdTask(),
+            'year' => $year,
+            'month' => $month,
+        ]);
     }
 
 

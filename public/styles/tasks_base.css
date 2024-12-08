@@ -227,6 +227,16 @@ button:hover a{
     color: black;
 }
 
+.btn-edit-del {
+    display: flex;
+    justify-content: space-around;
+}
+
+.delete_task {
+    position: relative;
+    top: 2px;
+}
+
 
 /* Survol des jours et boutons */
 .day:hover {

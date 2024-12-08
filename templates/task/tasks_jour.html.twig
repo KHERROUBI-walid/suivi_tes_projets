@@ -61,7 +61,13 @@
                                     <div class="task {{ task.StatutTask }}" id="task-{{ task.idTask }}">
 
                                         {% if is_granted("ROLE_MANAGER") %}
-                                        <img src="{{ asset('/images/icons/progress.png') }}" width="50px" onclick="openPopup({{ task.idTask }})"></img>
+                                        <div class="btn-edit-del">
+                                            <img src="{{ asset('/images/icons/progress.png') }}" width="50px" onclick="openPopup({{ task.idTask }})"></img>
+                                            <form class="delete_task" action="{{ path('task_delete', { 'task_id': task.idTask }) }}" method="post" style="display: inline;" onsubmit="return confirm('Attention ! Vous allez supprimer cette tache !');">
+                                                     <input type="hidden" name="_token" value="{{ csrf_token('delete_task_' ~ task.idTask) }}">
+                                                     <button type="submit"><img src="{{ asset('/images/icons/delete(2).png') }}" height="30px" width="30px"></img></button>
+                                            </form>
+                                        </div>
 
                                         <!-- Menu popup -->
                                         <div id="popup-{{ task.idTask }}" class="popup" style="display: none;">
@@ -77,13 +83,13 @@
                                                 </form>
                                             </div>
                                         </div>
-                                  <a href="{{ path('edit-task', {'id': task.idTask, 'return_url': app.request.uri}) }}">
-                                        {% endif %}
-                                        <div>
-                                            <p> {{ task.description }} </p>
-                                            <p> date de fin : {{ task.dateFinTache|date('d-m-Y') }} </p>
-                                        </div>
-                                  </a>
+                                            <a href="{{ path('edit-task', {'id': task.idTask, 'return_url': app.request.uri}) }}">
+                                                  {% endif %}
+                                                  <div>
+                                                      <p> {{ task.description }} </p>
+                                                      <p> date de fin : {{ task.dateFinTache|date('d-m-Y') }} </p>
+                                                  </div>
+                                            </a>
                                     </div>
                                 {% endfor %}
                             {% endif %}
