@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block title %}My Active Projects{% endblock %}
+
+{% block body %}
+<link href="{{ asset('styles/users.css') }}" rel="stylesheet"/>
+
+    <h1>Liste des utilisateurs</h1>
+
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Dernière connexion</th>
+          <th>Nombre de projets</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in pagination.items %}
+          <tr>
+            <td> {{ user.nom }} {{ user.prenom }} </td>
+            <td> {{ user.lastLogin | date('d-m-Y H:i') }} </td>
+            <td>{{ user.getProjectsNbr() }}</td>
+            <td>
+              <button class="btn ouvrir-btn" data-user-id="{{ user.id }}">Ouvrir</button>
+              <button class="btn supprimer-btn" data-user-id="{{ user.id }}">Supprimer</button>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+
+    <div class="pagination">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}
