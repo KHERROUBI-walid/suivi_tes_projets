@@ -21,11 +21,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
+    #[ORM\Column(length: 55)]
+    private ?string $nom = null;
+
+    #[ORM\Column(length: 55)]
+    private ?string $prenom = null;
+
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
     private array $roles = [];
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $lastLogin = null;
 
     /**
      * @var string The hashed password
@@ -39,11 +48,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'user')]
     private Collection $projects;
 
-    #[ORM\Column(length: 55)]
-    private ?string $nom = null;
-
-    #[ORM\Column(length: 55)]
-    private ?string $prenom = null;
 
     public function __construct()
     {
@@ -59,14 +63,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->email;
     }
-
+    
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
+        
         return $this;
     }
-
+    
     /**
      * A visual identifier that represents this user.
      *
@@ -76,6 +80,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return (string) $this->email;
     }
+    
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): static
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): static
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
 
     /**
      * @see UserInterface
@@ -87,10 +116,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
+        
         return array_unique($roles);
     }
-
+    
     /**
      * @param list<string> $roles
      */
@@ -100,6 +129,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
+    public function getLastLogin(): ?\DateTimeInterface
+    {
+        return $this->lastLogin;
+    }
+
+    public function setLastLogin(?\DateTimeInterface $lastLogin): self
+    {
+        $this->lastLogin = $lastLogin;
+        return $this;
+    }
+
 
     /**
      * @see PasswordAuthenticatedUserInterface
@@ -133,6 +175,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->projects;
     }
 
+    public function getProjectsNbr(): int
+    {
+        $nbr_projects = count($this->projects);
+        return $nbr_projects;
+    }
+
     public function addProject(Project $project): static
     {
         if (!$this->projects->contains($project)) {
@@ -155,27 +203,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
-
-    public function setPrenom(string $prenom): static
-    {
-        $this->prenom = $prenom;
-
-        return $this;
-    }
 }

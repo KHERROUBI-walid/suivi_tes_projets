@@ -48,7 +48,15 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        return new RedirectResponse('/projects/manager');
+        $user = $token->getUser(); 
+        $user_roles = $user->getRoles();
+
+        if(in_array("ROLE_MANAGER", $user_roles)){
+            return new RedirectResponse('/projects/manager');
+        } else if (in_array("ROLE_ADMIN", $user_roles)) {
+            return new RedirectResponse('/admin');
+        }
+
 
     }
 
