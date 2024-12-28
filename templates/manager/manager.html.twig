@@ -21,7 +21,7 @@
             <td> {{ user.lastLogin | date('d-m-Y H:i') }} </td>
             <td>{{ user.getProjectsNbr() }}</td>
             <td>
-              <button class="btn ouvrir-btn" data-user-id="{{ user.id }}">Ouvrir</button>
+              <a href="{{ path('app_projects_manager', { '_switch_user': user.email }) }}"><button class="btn ouvrir-btn">Ouvrir</button></a>
               <button class="btn supprimer-btn" data-user-id="{{ user.id }}">Supprimer</button>
             </td>
           </tr>

@@ -27,10 +27,6 @@ class ProjectsController extends AbstractController
             return new RedirectResponse('/projects/manager');
         }
 
-        if ($this->isGranted('ROLE_ADMIN')) {
-            return new RedirectResponse('/projects/admin');
-        }
-
         // Récupérer tous les projets triés par date de fin
         $projects = $projectRepository->findBy([], ['date_fin' => 'ASC']);
 
